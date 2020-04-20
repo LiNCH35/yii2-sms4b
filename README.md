@@ -37,7 +37,7 @@ $ php composer.phar require linch/yii2-sms4b "@dev"
 Вызов в коде
 
 ```
-Yii::$app->sms4b->SendSMS(
+Yii::$app->sms4b->send(
     $message,
     $phone
 );
