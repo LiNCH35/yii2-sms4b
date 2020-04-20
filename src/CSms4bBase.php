@@ -1,4 +1,7 @@
 <?
+
+namespace linch\sms4b;
+
 class CSms4bBase {
     protected $log = true;
     protected $header = 'POST %addr% HTTP/1.1
