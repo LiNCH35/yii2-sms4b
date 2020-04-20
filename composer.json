@@ -1,0 +1,19 @@
+{
+  "name": "linch35/yii2-sms4b",
+  "description": "sms4b extensions for yii2",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "sms4b"
+  ],
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Sergeychev Alexey",
+      "email": "sergeyhcevav@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.0"
+  }
+}
