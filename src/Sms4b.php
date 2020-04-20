@@ -14,10 +14,6 @@ class Sms4b extends BaseObject
     public function init()
     {
         $this->cSms4bBase = new CSms4bBase();
-        if (!$this->cSms4bBase->IsRegUser($this->login, $this->password))
-        {
-            throw new \RuntimeException('User not found');
-        }
         $this->cSms4bBase->CSms4bBase($this->login, $this->password);
         parent::init();
     }
