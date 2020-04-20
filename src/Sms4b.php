@@ -30,6 +30,11 @@ class Sms4b extends BaseObject
         );
     }
 
+    public function getBalance()
+    {
+        return $this->cSms4bBase->arBalance;
+    }
+
     public function getLogin()
     {
         return $this->cSms4bBase->getLogin();
