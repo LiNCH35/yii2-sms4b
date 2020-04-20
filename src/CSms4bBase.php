@@ -357,7 +357,7 @@ SOAPAction: "SMS %nameclient%/%func%"
         $this->LastError = '';
         if($xml <> '' && count($params) > 1)
         {
-            $pars_pref = substr(md5(time()+'qwe123'),0,10); //kick inters
+            $pars_pref = substr(md5(time().'qwe123'),0,10); //kick inters
 
             $xml = str_replace("\r\n",$pars_pref,$xml);
             $xml = str_replace("\n",$pars_pref,$xml);
