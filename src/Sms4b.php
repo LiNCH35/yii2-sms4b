@@ -24,9 +24,9 @@ class Sms4b extends BaseObject
             throw new \RuntimeException('Bad params "Phone"');
         }
 
-        return $this->cSms4bBase->SendSMS(
-            $phone,
-            $message
+        return (bool) $this->cSms4bBase->SendSMS(
+            $message,
+            $phone
         );
     }
 
