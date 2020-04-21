@@ -8,6 +8,7 @@ class Sms4b extends BaseObject
 {
     public $login;
     public $password;
+    public $sender = '';
 
     private $cSms4bBase;
 
@@ -24,9 +25,10 @@ class Sms4b extends BaseObject
             throw new \RuntimeException('Bad params "Phone"');
         }
 
-        return (bool) $this->cSms4bBase->SendSMS(
+        return $this->cSms4bBase->SendSMS(
             $message,
-            $phone
+            $phone,
+            $this->sender
         );
     }
 
@@ -78,6 +80,11 @@ class Sms4b extends BaseObject
     public function getFormatDate($date)
     {
         return $this->cSms4bBase->GetFormatDate($date);
+    }
+
+    public function setSender($sender)
+    {
+        $this->sender = $sender;
     }
 
     public function Translit($cyr_str)
