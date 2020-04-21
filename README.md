@@ -30,6 +30,7 @@ $ php composer.phar require linch/yii2-sms4b "@dev"
         'class' => '\linch\sms4b\Sms4b',
         'login' => 'login_example',
         'password' => 'password_example',
+        'sender' => 'sender_example', // optional
     ],
 ]
 ```
@@ -37,8 +38,5 @@ $ php composer.phar require linch/yii2-sms4b "@dev"
 Вызов в коде
 
 ```
-Yii::$app->sms4b->send(
-    $phone,
-    $message
-);
+Yii::$app->sms4b->send($phone,$message);
 ```
