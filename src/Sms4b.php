@@ -21,11 +21,6 @@ class Sms4b extends BaseObject
         parent::init();
     }
 
-    public function getBalance()
-    {
-        return $this->cSms4bBase->arBalance;
-    }
-
     public function setSender(string $sender)
     {
         return new self([
