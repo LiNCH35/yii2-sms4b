@@ -3,33 +3,22 @@
 
 namespace linch\sms4b;
 use yii\base\BaseObject;
+use yii\httpclient\Client;
+use yii\httpclient\Response;
 
 class Sms4b extends BaseObject
 {
     public $login;
     public $password;
     public $sender = '';
+    public $dev = false;
 
-    private $cSms4bBase;
+    private $client;
 
     public function init()
     {
-        $this->cSms4bBase = new CSms4bBase();
-        $this->cSms4bBase->CSms4bBase($this->login, $this->password);
+        $this->client = new Client();
         parent::init();
-    }
-
-    public function send($phone, $message): bool
-    {
-        if (!$this->cSms4bBase->is_phone($phone)) {
-            throw new \RuntimeException('Bad params "Phone"');
-        }
-
-        return $this->cSms4bBase->SendSMS(
-            $message,
-            $phone,
-            $this->sender
-        );
     }
 
     public function getBalance()
@@ -37,73 +26,55 @@ class Sms4b extends BaseObject
         return $this->cSms4bBase->arBalance;
     }
 
-    public function getLogin()
+    public function setSender(string $sender)
     {
-        return $this->cSms4bBase->getLogin();
-    }
-
-    public function isRegUser($Login, $Password)
-    {
-        return $this->cSms4bBase->IsRegUser($Login, $Password);
-    }
-
-    public function getUserGMT()
-    {
-        return $this->cSms4bBase->getUserGMT();
-    }
-
-    public function getSID()
-    {
-        return $this->cSms4bBase->GetSID();
-    }
-
-    public function createGuid()
-    {
-        return $this->cSms4bBase->CreateGuid();
-    }
-
-    public function enCodeMessage($message)
-    {
-        return $this->cSms4bBase->enCodeMessage($message);
-    }
-
-    public function getNpi($addr)
-    {
-        return $this->cSms4bBase->get_npi($addr);
-    }
-
-    public function isPhone($destination_numbers)
-    {
-        return $this->cSms4bBase->is_phone($destination_numbers);
-    }
-
-    public function getFormatDate($date)
-    {
-        return $this->cSms4bBase->GetFormatDate($date);
-    }
-
-    public function setSender($sender)
-    {
-        $this->sender = $sender;
-    }
-
-    public function Translit($cyr_str)
-    {
-        return $this->cSms4bBase->Translit($cyr_str);
+        return new self([
+            'login' => $this->login,
+            'password' => $this->password,
+            'sender' => $sender,
+            'dev' => $this->dev,
+        ]);
     }
 
     /**
-     * Отправка сообщений через метод GroupSMS
-     * @param $message
-     * @param string|array $to Addressees
-     * @param string $sender
-     * @param string $startUp_p
-     * @param string $dateActual_p
-     * @param string $period_p
-     * @return array
+     * @param $phone
+     * @param string $message
+     * @return bool
+     * @throws Sms4bException
      */
-    public function sendSmsPack($message, $to, $sender = '', $startUp_p = '', $dateActual_p = '', $period_p = '')
+    public function send($phone, string $message): bool
     {
-        return $this->cSms4bBase->SendSmsPack($message, $to, $sender, $startUp_p, $dateActual_p, $period_p);
+        $response = $this->makeRequest('SendSMS', $phone, $message);
+        return !(ctype_digit($response)  && $response <= 0);
+    }
+
+    /**
+     * @param string $action SendSMS|
+     * @param string $phone
+     * @param string $text
+     * @return mixed
+     * @throws Sms4bException
+     */
+    private function makeRequest(string $action, string $phone, string $text)
+    {
+        /** @var Response $response */
+        $response = $this->client->createRequest()
+            ->addHeaders(['content-type' => 'application/x-www-form-urlencoded'])
+            ->setMethod('POST')
+            ->setUrl('https://sms4b.ru/ws/sms.asmx/' . $action)
+            ->setData([
+                'Login' => $this->login,
+                'Password' => $this->password,
+                'Source' => $this->sender,
+                'Phone' => $phone,
+                'Text' => $text
+            ])
+            ->send();
+
+        $responseCode = $response->getData()[0];
+        if ($this->dev && ctype_digit($responseCode) && $responseCode <= 0) {
+            throw new Sms4bException($responseCode);
+        }
+        return $responseCode;
     }
 }
