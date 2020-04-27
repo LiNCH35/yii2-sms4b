@@ -31,6 +31,7 @@ $ php composer.phar require linch/yii2-sms4b "@dev"
         'login' => 'login_example',
         'password' => 'password_example',
         'sender' => 'sender_example', // optional
+        'dev' => true, // default:false, если включен то будет выдавать исключения в случае если пришла ошибка от сервиса
     ],
 ]
 ```
