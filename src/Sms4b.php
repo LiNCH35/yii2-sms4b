@@ -24,6 +24,7 @@ class Sms4b extends BaseObject
     public function setSender(string $sender)
     {
         return new self([
+
             'login' => $this->login,
             'password' => $this->password,
             'sender' => $sender,
